@@ -23,5 +23,10 @@
     "email": "x135356@sina.com",
     "url": "https://github.com/antietie"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "video.js": "^7.8.4",
+    "videojs-contrib-hls": "^5.15.0"
+  }
 }
