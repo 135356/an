@@ -4,7 +4,6 @@ class Random {
 
     /*生成随机整数*/
     getInt(min, max) {
-        min=min||9;
         if (!max) {
             max = min;
             min = 0;
