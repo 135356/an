@@ -137,7 +137,7 @@
         methods:{
             toF(infoid)
             {
-                this.$An2_Link.to('/FrontierDetail',{'infoid':infoid});
+                this.$An_link.to('/FrontierDetail',{'infoid':infoid});
             }
         },
         watch:{

@@ -11,6 +11,18 @@ class Local {
         }
     }
 
+    /*终端*/
+    getUA()
+    {
+        return navigator.userAgent;
+    }
+
+    /*是否ios*/
+    isIOS()
+    {
+        return !!navigator.userAgent.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/)?1:0; //ios终端
+    }
+
     /*创建本地缓存*/
     createLocal_(name, data, time) {
         switch (Object.prototype.toString.call(data)) {

@@ -1,8 +1,3 @@
-class data{
-    AaaaaF()
-    {
-        console.log(this);
-    }
-}
+class data{}
 
 export default data;

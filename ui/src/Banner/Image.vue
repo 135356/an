@@ -1,13 +1,13 @@
 <template>
     <div class="container" v-if="banner">
-        <div class="aa1" :style="'width:'+page.banner_weight+'px;left:'+page.banner_left+'px;transition: all '+page.time+'ms;'" @transitionend="page.end()" @touchstart="touch.touchStart($event)" @touchmove="touch.touchMove($event)" @touchend="touch.touchEnd()">
-            <div class="bb1" v-for="v in banner" @click="$An2_Link.to('/NewsInfo',{'infoid':v.infoid})">
+        <div class="aa1" :style="'width:'+page.banner_weight+'px;left:'+page.banner_left+'px;transition: all '+page.time+'ms;'" @transitionend.stop="page.end()" @touchstart.stop="touch.touchStart($event)" @touchmove.stop="touch.touchMove($event)" @touchend.stop="touch.touchEnd()">
+            <div class="bb1" v-for="v in banner" @click.stop="toF(v.infoid)">
                 <div v-if="v.content">{{v.content}}</div>
-                <img v-if="v.img" :src="v.img" />
+                <img v-if="v.img" :src="v.img" @error="$An.imgError()" />
             </div>
         </div>
         <div class="aa2">
-            <span v-for="v in banner.length" @click="page.dots(v)" :class="{'active':page.i===v-1}"></span>
+            <span v-for="v in banner.length" @click.stop="page.dots(v)" :class="{'active':page.i===v-1}"></span>
         </div>
     </div>
 </template>
@@ -83,6 +83,8 @@
                     state:0,
                     touchStart:(e)=>{/*触摸控件时*/
                         clearInterval(this.page.interval);
+                        this.touch.left=0;
+                        this.touch.right=0;
                         this.touch.startX = e.changedTouches[0].pageX;
                         this.touch.startY = e.changedTouches[0].pageY;
                     },
@@ -90,27 +92,28 @@
                         if (e.changedTouches.length) {
                             let X = e.changedTouches[0].pageX - this.touch.startX;
                             let Y = e.changedTouches[0].pageY - this.touch.startY;
-                            if (Math.abs(X) > Math.abs(Y) && X > 0) {
+                            let abs = {x:Math.abs(X),y:Math.abs(Y)};//type:X>0?'right':X<0?'left':Y>0?'bottom':Y<0?'top':''
+                            if (abs.x > abs.y && X > 0) {
                                 this.touch.left=0;
-                                this.touch.right=1;
-                                if(!this.touch.state&&Math.abs(X)>160){
+                                this.touch.right=abs.x;
+                                if(!this.touch.state&&abs.x>100){
                                     this.touch.state=1;
                                     this.page.next();
-                                }else if(Math.abs(X)>15){
+                                }else if(abs.x>50){
                                     this.page.banner_left='-'+(this.page.interval_width-160);
                                 }
-                            } else if (Math.abs(X) > Math.abs(Y) && X < 0) {
-                                this.touch.left=1;
+                            } else if (abs.x > abs.y && X < 0) {
+                                this.touch.left=abs.x;
                                 this.touch.right=0;
-                                if(!this.touch.state&&Math.abs(X)>160){
+                                if(!this.touch.state&&abs.x>100){
                                     this.touch.state=1;
                                     this.page.prev();
-                                }else if(Math.abs(X)>15){
+                                }else if(abs.x>50){
                                     this.page.banner_left='-'+(this.page.interval_width+160);
                                 }
-                            } else if (Math.abs(Y) > Math.abs(X) && Y > 0) {
+                            } else if (abs.y > abs.x && Y > 0) {
                                 //console.log("top 2 bottom", X, Y);
-                            } else if (Math.abs(Y) > Math.abs(X) && Y < 0) {
+                            } else if (abs.y > abs.x && Y < 0) {
                                 //console.log("bottom 2 top", X, Y);
                             } else {
                                 //console.log("just touch", X, Y);
@@ -118,10 +121,10 @@
                         }
                     },
                     touchEnd:()=>{/*离开控件时*/
-                        if(this.touch.left){
+                        if(this.touch.left>50){
                             this.page.next();
                             this.page.intervalF();
-                        }else if(this.touch.right){
+                        }else if(this.touch.right>50){
                             this.page.prev(this.banner.length);
                             this.page.intervalF();
                         }else{
@@ -132,7 +135,12 @@
             }
         },
         computed:{},
-        methods:{},
+        methods:{
+            toF(infoid)
+            {
+                this.$An_link.to('/FrontierDetail',{'infoid':infoid});
+            }
+        },
         watch:{},
         created(){},
         mounted(){

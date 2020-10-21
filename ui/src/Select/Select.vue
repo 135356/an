@@ -1,16 +1,12 @@
 <template>
     <div class="container">
         <div class="text" :style="style">
-            <div class="name">
-                <span v-if="select!==-1">{{data[select_i]['name']}}</span>
-                <span v-else style="color:#777;">{{placeholder}}</span>
-            </div>
+            <slot></slot>
         </div>
         <div class="cont" v-if="show">
             <div class="alert">
                 <ul>
-                    <li v-for="(v,i) in data" @click.stop="selectF(i)" :class="{'select':v.val == select}">{{v.name}}
-                    </li>
+                    <li v-for="(v,i) in data" @click.stop="selectF(i)" :class="{'active':v.value == value}">{{v.name}}</li>
                 </ul>
                 <div style="width:100%;height:60px;"></div>
                 <div @click.stop="closeF()" class="close">{{'取消'|_}}</div>
@@ -23,54 +19,66 @@
 <script>
     export default {
         name: 'AnSelectSelect',
-        props: {show_: Boolean, data_: Array, select_: {type: String | Number}, style_: String, placeholder_: String},
+        props: {'show_':Boolean|Number,'data_': Array, 'select_index_': Number, 'style_': String},
         data() {
             return {
-                show: this.show_,
+                show:this.show_,
                 data: this.data_,
-                select: this.select_,
+                value:'',
                 style: this.style_,
-                placeholder: this.placeholder_,
-                select_i: 0,
+                select_index:this.select_index_,
             }
         },
         watch: {
-            show_(val) {
-                this.show = val;
+            show_(val){
+                this.show=val;
             },
             data_(val) {
                 this.data = val;
             },
-            select_(val) {
-                this.select = val;
-                for (let i = 0; i < this.data.length; i++) {
-                    if (this.data[i].val == this.select) {
-                        this.select_i = i;
-                        return;
+            select_index_(val) {
+                this.select_index=val;
+                if(this.data_.length){
+                    if(this.select_index>-1){
+                        if(this.select_index>=this.data_.length){
+                            this.value=this.data_[this.data_.length-1].value;
+                        }else{
+                            this.value=this.data_[this.select_index].value;
+                        }
+                    }else{
+                        this.value='';
                     }
+                }else{
+                    this.value='';
                 }
             }
         },
         methods: {
             selectF(i) {
-                this.show = false;
-                this.select = this.data[i].val;
-                this.select_i = i;
-                this.$emit('AnSelectSelectF', {show: this.show, select: this.select,i:this.select_i});
+                this.show=false;
+                this.select_index = i;
+                this.value = this.data[i].value;
+                this.$emit('AnSelectSelectF', {'show':this.show,'value': this.value,'index':this.select_index});
             },
             closeF() {
-                this.show = false;
-                this.$emit('AnSelectSelectF', {show: this.show, select: this.select,i:this.select_i});
+                this.show=false;
+                this.$emit('AnSelectSelectF', {'show':this.show,'value': this.value,'index':this.select_index});
             }
         },
-        created() {
-        },
+        created() {},
         mounted() {
-            for (let i = 0; i < this.data.length; i++) {
-                if (this.data[i].val == this.select) {
-                    this.select_i = i;
-                    return;
+            if(this.data_.length){
+                if(this.select_index_>-1){
+                    if(this.select_index_>=this.data_.length){
+                        this.value=this.data_[this.data_.length-1].value;
+                    }else{
+                        this.value=this.data_[this.select_index_].value;
+                    }
+                }else{
+                    this.value='';
                 }
+            }else{
+                this.value='';
             }
         },
         destroyed() {}
@@ -85,16 +93,6 @@
         .text {
             position: relative;
             width: 100%;
-
-            .placeholder {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                max-height: 40px;
-                overflow: hidden;
-                color: #aaa;
-            }
         }
 
         .cont {
@@ -113,8 +111,7 @@
                     text-align: center;
                     font-size: 16px;
 
-                    .select {
-                        border-bottom: solid 1px #888;
+                    .active {
                         background: #f6f6f6;
                     }
 

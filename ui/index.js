@@ -9,6 +9,7 @@ import RefreshRefresh from './src/Scroll/Refresh.vue';
 import SelectCheckbox from './src/Select/Checkbox.vue';
 import SelectRadio from './src/Select/Radio.vue';
 import SelectSelect from './src/Select/Select.vue';
+import AnSelectSelectDate from './src/Select/SelectDate.vue';
 
 const components = [
     AlertText,
@@ -22,6 +23,7 @@ const components = [
     SelectCheckbox,
     SelectRadio,
     SelectSelect,
+    AnSelectSelectDate,
 ];
 
 const install = function(Vue, opts = {}) {
@@ -52,4 +54,5 @@ export default {
     SelectCheckbox,
     SelectRadio,
     SelectSelect,
+    AnSelectSelectDate,
 };

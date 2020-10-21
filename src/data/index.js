@@ -42,8 +42,8 @@ class Index extends mix(Local,Ajax,Data) {
 
     this_(this_) {
         this.this__ = this_;
-        this.link_get = this.this__.$An2_Link.get();
-        this.getUserLocal();//这里就会执行登录
+        this.link_get = this.this__.$An_link.get();
+        //this.getUserLocal();//这里就会执行登录
         return this;
     }
 

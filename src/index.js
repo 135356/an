@@ -7,11 +7,11 @@ import random from './random/index.js';
 import video from './video/index.js';
 
 const install = function(Vue, opts = {}) {
-    Vue.prototype.$An_an=new an();
+    Vue.prototype.$An=new an();
     Vue.prototype.$An_data=new data();
     Vue.prototype.$An_jq=new jq();
-    Vue.prototype.$An_language=new language();
     Vue.prototype.$An_link=new link();
+    Vue.prototype.$An_language=new language(Vue.prototype.$An_link.get('ipcode'));
     Vue.prototype.$An_random=new random();
     Vue.prototype.$An_video=new video();
     Vue.prototype._=(value)=>{return Vue.prototype.$An_language.to(value)};

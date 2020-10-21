@@ -15,7 +15,7 @@
             <!--引导广告-->
             <div v-if="model3.show" class="model3">
                 <div @click="hiddenF()" class="time">{{model3.time}}</div>
-                <img :src="model3.img"/>
+                <img :src="model3.img" @error="$An.imgError()" />
             </div>
         </div>
     </div>
@@ -66,7 +66,8 @@
                     img: '',
                     timeF(this_) {
                         this_.show = 1;
-                        if (this_.$An_link.get('ipcode').toLowerCase() == 'cn') {
+                        let ipcode = this_.$An_link.get('ipcode');
+                        if (ipcode && ipcode.toLowerCase() == 'cn') {
                             this.img = require('./assets/img/start_cn.jpg');
                         } else {
                             this.img = require('./assets/img/start_en.jpg');
@@ -75,10 +76,39 @@
                         //localStorage.setItem('load_img', this.state);
                         this.inter = setInterval(() => {
                             if (!--this.time) {
+                                this_.typeF();
                                 this_.show = 0;
                                 clearInterval(this.inter);
                             }
                         }, 1000);
+                    }
+                },
+                typeF()
+                {
+                    switch (this.load_model) {
+                        case 1://进度条
+                            this.model1.show = 1;
+                            this.model2.show = 0;
+                            this.model3.show = 0;
+                            this.$An_data.request(this.model1.request);
+                            this.$An_data.response(this.model1.response);
+                            break;
+                        case 2://转圈圈
+                            this.model1.show = 0;
+                            this.model2.show = 1;
+                            this.model3.show = 0;
+                            this.$An_data.request(this.model2.request);
+                            this.$An_data.response(this.model2.response);
+                            setTimeout(()=>{
+                                this.model2.response();
+                            }, 2000); //转圈圈最大持续时长为2秒，避免遮挡用户
+                            break;
+                        case 3://引导广告
+                            this.model1.show = 0;
+                            this.model2.show = 0;
+                            this.model3.show = 1;
+                            this.model3.timeF(this);
+                            break;
                     }
                 },
                 hiddenF() {
@@ -86,48 +116,26 @@
                 },
             }
         },
+        computed: {},
         watch: {
             $route(to, from) {
                 this.is_route=1;
-                if (to.path == '/Index' && from.path == '/') {
-                    this.load_model = 3;
-                } else {
-                    this.load_model = this.$An2_Data.load.model;
-                }
-                switch (this.load_model) {
-                    case 1://进度条
-                        this.model1.show = 1;
-                        this.model2.show = 0;
-                        this.model3.show = 0;
-                        this.$An2_Data.request(this.model1.request);
-                        this.$An2_Data.response(this.model1.response);
-                        break;
-                    case 2://转圈圈
-                        this.model1.show = 0;
-                        this.model2.show = 1;
-                        this.model3.show = 0;
-                        this.$An2_Data.request(this.model2.request);
-                        this.$An2_Data.response(this.model2.response);
-                        break;
-                    case 3://引导广告
-                        this.model1.show = 0;
-                        this.model2.show = 0;
-                        this.model3.show = 1;
-                        this.model3.timeF(this);
-                        break;
-                }
+                this.typeF();
             }
         },
         created() {
-            if(window.name!=='reload'){
-                if(!this.is_route){
+            this.load_model = this.$An_data.load.model;
+            if(this.$route.name==='Home'){
+                if(!this.is_route&&!this.$An_data.getLocal_('reload_is')){
                     this.model1.show = 0;
                     this.model2.show = 0;
                     this.model3.show = 1;
                     this.model3.timeF(this);
+                }else{
+                    this.typeF();
                 }
             }else{
-                window.name='';
+                this.typeF();
             }
         }
     }
@@ -200,7 +208,7 @@
 
     #load .model3 .time {
         position: absolute;
-        top: 10px;
+        top: 40px;
         right: 10px;
         color: #aaa;
         width: 46px;

@@ -19,11 +19,14 @@ class Link {
     link里没有 / 则是以name跳转并使用的是params传参
     */
     to(link, data) {
+
         let number = link ? parseInt(link) : 0;
         if (number || number == 0) {
             window.history.go(number);
             //this_.$router.go(number);
-        } else {
+        } else if(link==='close'){
+            price.closeWeb({}); //关闭
+        }else{
             let data_ = {};
             if (link.indexOf('//') != -1) {
                 window.location.href = link;
