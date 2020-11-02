@@ -12,21 +12,21 @@
                     </div>
                 </div>
                 <div class="date">
-                    <ul class="year" @touchstart.stop="year.touchStart()" @touchmove.stop="year.touchMove($event)" @touchend.stop="year.touchEnd()">
+                    <ul class="year" @touchstart.stop="year.touchStart($event)" @touchmove.stop="year.touchMove($event)" @touchend.stop="year.touchEnd()">
                         <li v-for="(v) in year.date.arr">
-                            <span v-if="v">{{v}}{{'年'|_}}</span>
+                            <span v-if="v">{{v}}&nbsp;{{'年'|_}}</span>
                             <span v-else></span>
                         </li>
                     </ul>
-                    <ul class="month" @touchstart.stop="month.touchStart()" @touchmove.stop="month.touchMove($event)" @touchend.stop="month.touchEnd()">
+                    <ul class="month" @touchstart.stop="month.touchStart($event)" @touchmove.stop="month.touchMove($event)" @touchend.stop="month.touchEnd()">
                         <li v-for="(v) in month.date.arr">
-                            <span v-if="v">{{v}}{{'月'|_}}</span>
+                            <span v-if="v">{{v}}&nbsp;{{'月'|_}}</span>
                             <span v-else></span>
                         </li>
                     </ul>
-                    <ul class="dat" @touchstart.stop="dat.touchStart()" @touchmove.stop="dat.touchMove($event)" @touchend.stop="dat.touchEnd()">
+                    <ul class="dat" @touchstart.stop="dat.touchStart($event)" @touchmove.stop="dat.touchMove($event)" @touchend.stop="dat.touchEnd()">
                         <li v-for="(v) in dat.date.arr">
-                            <span v-if="v">{{v}}{{'日'|_}}</span>
+                            <span v-if="v">{{v}}&nbsp;{{'日'|_}}</span>
                             <span v-else></span>
                         </li>
                     </ul>
@@ -65,9 +65,12 @@
                         clientY_arr:[],
                     },//方向
                     timer:'',
+                    is:0,
+                    aaaaa:0,
                     generateF(v)
                     {
                         this.date.arr=[];
+                        this.is=1;
                         v=this.date.start-4;
                         if(v<this.date.end-4){
                             this.date.start++;
@@ -86,6 +89,7 @@
                     generate1F(v)
                     {
                         this.date.arr=[];
+                        this.is=1;
                         v=this.date.start-4;
                         if(v>-3){
                             this.date.start--;
@@ -98,25 +102,33 @@
                             }
                         }
                     },
-                    touchStart(){/*触摸控件时*/
+                    touchStart(e){/*触摸控件时*/
+                        if(this.timer){
+                            clearTimeout(this.timer);
+                        }
                         this.direction.clientY_arr=[];
+                        this.direction.clientY=e.touches[0].clientY;
                     },
                     touchMove(e){/*滑动时*/
                         if (e.changedTouches.length) {
-                            if(this.timer){
-                                clearTimeout(this.timer);
-                            }
-                            this.timer = setTimeout(()=>{
-                                this.direction.clientY_arr.push(e.touches[0].clientY);
-                                if(this.direction.clientY_arr[this.direction.clientY_arr.length-2]>e.touches[0].clientY){
-                                    this.generateF();
-                                }else{
-                                    this.generate1F();
+                            this.aaaaa++;
+                            setTimeout(()=>{
+                                if(this.aaaaa>1){
+                                    this.direction.clientY_arr.push(e.touches[0].clientY);
+                                    if(this.direction.clientY_arr[this.direction.clientY_arr.length-2]>e.touches[0].clientY){
+                                        this.generateF();
+                                    }else if(this.direction.clientY_arr[this.direction.clientY_arr.length-2]<e.touches[0].clientY){
+                                        this.generate1F();
+                                    }
                                 }
-                            },8);
+                                this.aaaaa=0;
+                            },20);
                         }
                     },
                     touchEnd(){
+                        if(this.timer){
+                            clearTimeout(this.timer);
+                        }
                         this.value=this.date.arr[4];
                         let a = new Date(this.value, this.month()['value'], 0);
                         this.dat()['date'].end=a.getDate();
@@ -192,6 +204,9 @@
                         }
                     },
                     touchEnd(){
+                        if(this.timer){
+                            clearTimeout(this.timer);
+                        }
                         this.value=this.date.arr[4];
                         let a = new Date(this.year()['value'], this.value, 0);
                         this.dat()['date'].end=a.getDate();
@@ -261,6 +276,9 @@
                         }
                     },
                     touchEnd(){
+                        if(this.timer){
+                            clearTimeout(this.timer);
+                        }
                         this.value=this.date.arr[4];
                     }
                 },
@@ -329,7 +347,7 @@
                 bottom: 0;
                 z-index: 100;
                 width: 100%;
-                height: 260px;
+                height: 205px;
                 overflow: auto;
                 text-align: center;
                 background: #D8D8D8;
@@ -362,7 +380,7 @@
                     ul{
                         width:33.3%;
                         height:100%;
-                        margin:20px auto 5px;
+                        margin:5px auto;
                         overflow-y:auto;
                         li{
                             height:30px;
@@ -374,19 +392,19 @@
                             height:10px;
                             line-height: 10px;
                             font-size:1.8rem;
-                            opacity: 0.3;
+                            opacity: 0.1;
                             transform:rotate3d(1,0,0,65deg);
                         }
                         li:nth-child(2){
-                            height:20px;
-                            line-height: 20px;
+                            height:12px;
+                            line-height: 12px;
                             font-size:2.2rem;
-                            opacity: 0.4;
+                            opacity: 0.3;
                             transform:rotate3d(1,0,0,55deg);
                         }
                         li:nth-child(3){
-                            height:23px;
-                            line-height: 23px;
+                            height:15px;
+                            line-height: 15px;
                             font-size:2.4rem;
                             opacity: 0.6;
                             transform:rotate3d(1,0,0,40deg);
@@ -400,6 +418,7 @@
                         }
                         li:nth-child(5){
                             opacity: 1;
+                            font-weight:600;
                             border-top:solid 1px #888;
                             border-bottom:solid 1px #888;
                         }
@@ -411,24 +430,24 @@
                             transform:rotate3d(1,0,0,30deg);
                         }
                         li:nth-child(7){
-                            height:23px;
-                            line-height: 23px;
+                            height:15px;
+                            line-height: 15px;
                             font-size:2.4rem;
                             opacity: 0.6;
                             transform:rotate3d(1,0,0,40deg);
                         }
                         li:nth-child(8){
-                            height:20px;
-                            line-height: 20px;
+                            height:12px;
+                            line-height: 12px;
                             font-size:2.2rem;
-                            opacity: 0.4;
+                            opacity: 0.3;
                             transform:rotate3d(1,0,0,55deg);
                         }
                         li:nth-child(9){
                             height:10px;
                             line-height: 10px;
                             font-size:1.8rem;
-                            opacity: 0.3;
+                            opacity: 0.1;
                             transform:rotate3d(1,0,0,65deg);
                         }
                     }
