@@ -5,7 +5,7 @@
                 <slot :name="v"></slot>
             </div>
         </div>
-        <div class="aa2">
+        <div class="aa2" v-if="nav">
             <span v-for="v in page.banner_length" @click.stop="page.dots(v)" :class="{'active':page.i===v-1}"></span>
         </div>
     </div>
@@ -14,10 +14,11 @@
 <script>
     export default {
         name: "AnBannerDiv",
-        props:{'data_':Number|String},
+        props:{'data_':Number|String,'nav_':Boolean|Number},
         components:{},
         data(){
             return {
+                nav:this.nav_||false,
                 page:{
                     i:0,//当前下标
                     time:500,//动画时间
