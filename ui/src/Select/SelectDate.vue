@@ -60,17 +60,31 @@
                         end:2020,
                         arr:[],
                     },
-                    direction: {
-                        clientY:0,
+                    move:{
+                        stateX:0,//左右状态
+                        stateY:0,//上下状态
+                        space:8,//间隔
+                        clientX_arr:[],
                         clientY_arr:[],
-                    },//方向
-                    timer:'',
-                    is:0,
-                    aaaaa:0,
+                        xF(type)
+                        {
+                            this.stateX=0;
+                            this.clientX_arr=[];
+                        },
+                        yF(type,this_)
+                        {
+                            this.stateY=0;
+                            this.clientY_arr=[];
+                            if(type){
+                                this_.generateF();
+                            }else{
+                                this_.generate1F();
+                            }
+                        }
+                    },
                     generateF(v)
                     {
                         this.date.arr=[];
-                        this.is=1;
                         v=this.date.start-4;
                         if(v<this.date.end-4){
                             this.date.start++;
@@ -89,7 +103,6 @@
                     generate1F(v)
                     {
                         this.date.arr=[];
-                        this.is=1;
                         v=this.date.start-4;
                         if(v>-3){
                             this.date.start--;
@@ -103,32 +116,24 @@
                         }
                     },
                     touchStart(e){/*触摸控件时*/
-                        if(this.timer){
-                            clearTimeout(this.timer);
-                        }
-                        this.direction.clientY_arr=[];
-                        this.direction.clientY=e.touches[0].clientY;
+                        this.move.clientY_arr=[];
                     },
                     touchMove(e){/*滑动时*/
                         if (e.changedTouches.length) {
-                            this.aaaaa++;
-                            setTimeout(()=>{
-                                if(this.aaaaa>1){
-                                    this.direction.clientY_arr.push(e.touches[0].clientY);
-                                    if(this.direction.clientY_arr[this.direction.clientY_arr.length-2]>e.touches[0].clientY){
-                                        this.generateF();
-                                    }else if(this.direction.clientY_arr[this.direction.clientY_arr.length-2]<e.touches[0].clientY){
-                                        this.generate1F();
+                            this.move.clientY_arr.push(e.touches[0].clientY);
+                            if(this.move.clientY_arr.length>this.move.space){
+                                if(!this.move.stateY){
+                                    this.move.stateY=1;
+                                    if(this.move.clientY_arr[this.move.clientY_arr.length-this.move.space+1] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
+                                        this.move.yF(1,this);
+                                    }else{
+                                        this.move.yF(0,this);
                                     }
                                 }
-                                this.aaaaa=0;
-                            },20);
+                            }
                         }
                     },
                     touchEnd(){
-                        if(this.timer){
-                            clearTimeout(this.timer);
-                        }
                         this.value=this.date.arr[4];
                         let a = new Date(this.value, this.month()['value'], 0);
                         this.dat()['date'].end=a.getDate();
@@ -147,11 +152,28 @@
                         end:12,
                         arr:[],
                     },
-                    direction: {
-                        clientY:0,
+                    move:{
+                        stateX:0,//左右状态
+                        stateY:0,//上下状态
+                        space:8,//间隔
+                        clientX_arr:[],
                         clientY_arr:[],
-                    },//方向
-                    timer:'',
+                        xF(type)
+                        {
+                            this.stateX=0;
+                            this.clientX_arr=[];
+                        },
+                        yF(type,this_)
+                        {
+                            this.stateY=0;
+                            this.clientY_arr=[];
+                            if(type){
+                                this_.generateF();
+                            }else{
+                                this_.generate1F();
+                            }
+                        }
+                    },
                     generateF(v)
                     {
                         this.date.arr=[];
@@ -186,27 +208,24 @@
                         }
                     },
                     touchStart(){/*触摸控件时*/
-                        this.direction.clientY_arr=[];
+                        this.move.clientY_arr=[];
                     },
                     touchMove(e){/*滑动时*/
                         if (e.changedTouches.length) {
-                            if(this.timer){
-                                clearTimeout(this.timer);
-                            }
-                            this.timer = setTimeout(()=>{
-                                this.direction.clientY_arr.push(e.touches[0].clientY);
-                                if(this.direction.clientY_arr[this.direction.clientY_arr.length-2]>e.touches[0].clientY){
-                                    this.generateF();
-                                }else{
-                                    this.generate1F();
+                            this.move.clientY_arr.push(e.touches[0].clientY);
+                            if(this.move.clientY_arr.length>this.move.space){
+                                if(!this.move.stateY){
+                                    this.move.stateY=1;
+                                    if(this.move.clientY_arr[this.move.clientY_arr.length-this.move.space+1] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
+                                        this.move.yF(1,this);
+                                    }else{
+                                        this.move.yF(0,this);
+                                    }
                                 }
-                            },15);
+                            }
                         }
                     },
                     touchEnd(){
-                        if(this.timer){
-                            clearTimeout(this.timer);
-                        }
                         this.value=this.date.arr[4];
                         let a = new Date(this.year()['value'], this.value, 0);
                         this.dat()['date'].end=a.getDate();
@@ -219,11 +238,28 @@
                         end:30,
                         arr:[],
                     },
-                    direction: {
-                        clientY:0,
+                    move:{
+                        stateX:0,//左右状态
+                        stateY:0,//上下状态
+                        space:8,//间隔
+                        clientX_arr:[],
                         clientY_arr:[],
-                    },//方向
-                    timer:'',
+                        xF(type)
+                        {
+                            this.stateX=0;
+                            this.clientX_arr=[];
+                        },
+                        yF(type,this_)
+                        {
+                            this.stateY=0;
+                            this.clientY_arr=[];
+                            if(type){
+                                this_.generateF();
+                            }else{
+                                this_.generate1F();
+                            }
+                        }
+                    },
                     generateF(v)
                     {
                         this.date.arr=[];
@@ -258,27 +294,24 @@
                         }
                     },
                     touchStart(){/*触摸控件时*/
-                        this.direction.clientY_arr=[];
+                        this.move.clientY_arr=[];
                     },
                     touchMove(e){/*滑动时*/
                         if (e.changedTouches.length) {
-                            if(this.timer){
-                                clearTimeout(this.timer);
-                            }
-                            this.timer = setTimeout(()=>{
-                                this.direction.clientY_arr.push(e.touches[0].clientY);
-                                if(this.direction.clientY_arr[this.direction.clientY_arr.length-2]>e.touches[0].clientY){
-                                    this.generateF();
-                                }else{
-                                    this.generate1F();
+                            this.move.clientY_arr.push(e.touches[0].clientY);
+                            if(this.move.clientY_arr.length>this.move.space){
+                                if(!this.move.stateY){
+                                    this.move.stateY=1;
+                                    if(this.move.clientY_arr[this.move.clientY_arr.length-this.move.space+1] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
+                                        this.move.yF(1,this);
+                                    }else{
+                                        this.move.yF(0,this);
+                                    }
                                 }
-                            },10);
+                            }
                         }
                     },
                     touchEnd(){
-                        if(this.timer){
-                            clearTimeout(this.timer);
-                        }
                         this.value=this.date.arr[4];
                     }
                 },
@@ -347,7 +380,7 @@
                 bottom: 0;
                 z-index: 100;
                 width: 100%;
-                height: 205px;
+                height: 376px;
                 overflow: auto;
                 text-align: center;
                 background: #D8D8D8;
@@ -380,39 +413,39 @@
                     ul{
                         width:33.3%;
                         height:100%;
-                        margin:5px auto;
+                        margin:15px auto;
                         overflow-y:auto;
                         li{
-                            height:30px;
-                            line-height: 30px;
-                            font-size:2.6rem;
+                            height:50px;
+                            line-height: 50px;
+                            font-size:16px;
                             color:#333;
                         }
                         li:nth-child(1){
-                            height:10px;
-                            line-height: 10px;
-                            font-size:1.8rem;
+                            height:20px;
+                            line-height: 20px;
+                            font-size:10px;
                             opacity: 0.1;
                             transform:rotate3d(1,0,0,65deg);
                         }
                         li:nth-child(2){
-                            height:12px;
-                            line-height: 12px;
-                            font-size:2.2rem;
+                            height:22px;
+                            line-height: 22px;
+                            font-size:12px;
                             opacity: 0.3;
                             transform:rotate3d(1,0,0,55deg);
                         }
                         li:nth-child(3){
-                            height:15px;
-                            line-height: 15px;
-                            font-size:2.4rem;
+                            height:35px;
+                            line-height: 35px;
+                            font-size:13px;
                             opacity: 0.6;
                             transform:rotate3d(1,0,0,40deg);
                         }
                         li:nth-child(4){
-                            height:25px;
-                            line-height: 25px;
-                            font-size:2.5rem;
+                            height:40px;
+                            line-height: 40px;
+                            font-size:14px;
                             opacity: 0.7;
                             transform:rotate3d(1,0,0,30deg);
                         }
@@ -423,30 +456,30 @@
                             border-bottom:solid 1px #888;
                         }
                         li:nth-child(6){
-                            height:25px;
-                            line-height: 25px;
-                            font-size:2.5rem;
+                            height:40px;
+                            line-height: 40px;
+                            font-size:14px;
                             opacity: 0.7;
                             transform:rotate3d(1,0,0,30deg);
                         }
                         li:nth-child(7){
-                            height:15px;
-                            line-height: 15px;
-                            font-size:2.4rem;
+                            height:35px;
+                            line-height: 35px;
+                            font-size:13px;
                             opacity: 0.6;
                             transform:rotate3d(1,0,0,40deg);
                         }
                         li:nth-child(8){
-                            height:12px;
-                            line-height: 12px;
-                            font-size:2.2rem;
+                            height:22px;
+                            line-height: 22px;
+                            font-size:12px;
                             opacity: 0.3;
                             transform:rotate3d(1,0,0,55deg);
                         }
                         li:nth-child(9){
-                            height:10px;
-                            line-height: 10px;
-                            font-size:1.8rem;
+                            height:20px;
+                            line-height: 20px;
+                            font-size:10px;
                             opacity: 0.1;
                             transform:rotate3d(1,0,0,65deg);
                         }

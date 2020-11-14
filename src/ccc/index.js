@@ -1,4 +1,4 @@
-class Cc {
+class Ccc {
     constructor() {
     }
 
@@ -22,4 +22,4 @@ class Cc {
     }
 }
 
-export default Cc;
+export default Ccc;

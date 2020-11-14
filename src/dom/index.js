@@ -1,4 +1,4 @@
-class Div
+class Dom
 {
   type=''
   current={}
@@ -183,4 +183,4 @@ class Div
   {}
 }
 
-export default Div;
+export default Dom;

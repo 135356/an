@@ -1,6 +1,6 @@
 import Local from './Local'
 import Ajax from './Ajax'
-import Data from './Data'
+import Api from './Api'
 
 function mix(...mixins) {
     class Mix {
@@ -31,8 +31,8 @@ function copyProperties(target, source) {
     }
 }
 
-class Index extends mix(Local,Ajax,Data) {
-    user_id = 0; //在调用了login登录之后才会有
+class Data extends mix(Local,Ajax,Api) {
+    user_id = 10000041; //在调用了login登录之后才会有
     link_get=[]; //链接里的参数
     is_repeatedly_ = 0; //开始请求时为真，避免多个重复请求
 
@@ -71,4 +71,4 @@ class Index extends mix(Local,Ajax,Data) {
     }
 }
 
-export default Index;
+export default Data;

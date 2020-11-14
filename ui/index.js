@@ -2,6 +2,7 @@ import AlertText from './src/Alert/Text.vue';
 import BannerDiv from './src/Banner/Div.vue';
 import BannerDiv1 from './src/Banner/Div1.vue';
 import BannerImage from './src/Banner/Image.vue';
+import BannerTouch from './src/Banner/Touch.vue';
 import LoadStart from './src/Load/Start.vue';
 import ProductImage from './src/Product/Image.vue';
 import ScrollLoad from './src/Scroll/Load.vue';
@@ -16,6 +17,7 @@ const components = [
     BannerDiv,
     BannerDiv1,
     BannerImage,
+    BannerTouch,
     LoadStart,
     ProductImage,
     ScrollLoad,
@@ -47,6 +49,7 @@ export default {
     BannerDiv,
     BannerDiv1,
     BannerImage,
+    BannerTouch,
     LoadStart,
     ProductImage,
     ScrollLoad,

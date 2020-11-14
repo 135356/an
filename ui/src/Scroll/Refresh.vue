@@ -126,7 +126,7 @@
     }
 
     .load .turn_text {
-        font-size: 2rem;
+        font-size:12px;
     }
 
     @keyframes turn {

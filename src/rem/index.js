@@ -1,19 +1,31 @@
 class Rem {
-    constructor() {
+    min_size=0;
+
+    constructor(){}
+
+    set(size,width)
+    {
+        size=size||6;
+        width=width||320;
         let docEl = document.documentElement;
         let resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize';
-        let recalc = function () {
+        let recalc = ()=>{
             let clientWidth = docEl.clientWidth;
             if (!clientWidth) return;
-            let size=6*(clientWidth / 320);
-            if(!size||size<6){size=6;}
-            docEl.style.fontSize = size+'px';
-            localStorage.setItem('font_size_', size);
+            this.min_size=size*(clientWidth/width);
+            if(!this.min_size||this.min_size<size){this.min_size=size;}
+            docEl.style.fontSize = this.min_size+'px';
+            localStorage.setItem('font_size_', this.min_size+'');
         };
         if (!document.addEventListener) return;
         window.addEventListener(resizeEvt, recalc, false);
         document.addEventListener('DOMContentLoaded', recalc, false);
     }
+
+    get()
+    {
+        return this.min_size;
+    }
 }
 
-export default new Rem();
+export default new Rem;

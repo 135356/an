@@ -125,7 +125,7 @@
         background:rgba(0,0,0,0.5);
     }
     .backTop .an1_iconfont{
-        font-size:2rem;
+        font-size:12px;
     }
     .load {
         position: fixed;
@@ -161,7 +161,7 @@
     }
 
     .load .turn_text {
-        font-size: 2rem;
+        font-size:12px;
     }
 
     .load_end {

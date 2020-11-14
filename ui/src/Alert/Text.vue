@@ -37,7 +37,7 @@
         left:50%;
         width:80%;
         z-index: 9999;
-        font-size:2.6rem;
+        font-size:16px;
         color:#fff;
         padding:15px 5px;
         border-radius:5px;

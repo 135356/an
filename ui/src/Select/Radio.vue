@@ -7,11 +7,12 @@
 <script>
     export default {
         name:'AnSelectRadio',
-        props: {'select_index_':Number,'index_':Number},
+        props: {'select_index_':Number,'index_':Number|Array},
         data() {
             return {
                 active:false,
-                index:this.index_,
+                index:0,
+                data:'',
                 select_index:this.select_index_,
             }
         },
@@ -23,6 +24,14 @@
                     this.active=true;
                 }else{
                     this.active=false;
+                }
+            },
+            index_(v)
+            {
+                if(typeof this.index_==='number'){
+                    this.index=v;
+                }else if(typeof this.index_==='object'){
+                    this.data=v;
                 }
             }
         },
@@ -38,6 +47,11 @@
                 this.active=true;
             }else{
                 this.active=false;
+            }
+            if(typeof this.index_==='number'){
+                this.index=this.index_;
+            }else if(typeof this.index_==='object'){
+                this.data=this.index_;
             }
         },
         destroyed() {}

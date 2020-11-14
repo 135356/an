@@ -1,6 +1,5 @@
 class Random {
-    constructor() {
-    }
+    constructor(){}
 
     /*生成随机整数*/
     getInt(min, max) {

@@ -128,7 +128,7 @@
         }
         .content1{
             text-align: left;
-            font-size:2.33rem;
+            font-size:14px;
             font-weight: bold;
         }
         .other{
