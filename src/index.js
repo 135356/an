@@ -4,18 +4,18 @@ import Dom from './dom/index.js';
 import Language from './language/index.js';
 import Link from './link/index.js';
 import Random from './random/index.js';
-import video from './video/index.js';
 import Rem from './rem/index.js';
+import video from './video/index.js';
 
 const install = function(Vue, opts = {}) {
     Vue.prototype.$An=new Ccc();
-    Vue.prototype.$An_rem=new Rem();
     Vue.prototype.$An_data=new Data();
     Vue.prototype.$An_jq=new Dom();//将被遗弃
     Vue.prototype.$An_dom=new Dom();
     Vue.prototype.$An_link=new Link();
     Vue.prototype.$An_language=new Language(Vue.prototype.$An_link.get('ipcode'));
     Vue.prototype.$An_random=new Random();
+    Vue.prototype.$An_rem=new Rem();
     Vue.prototype.$An_video=new video();
     Vue.prototype._=(value)=>{return Vue.prototype.$An_language.to(value)};
     Vue.filter('_',(value)=>{
@@ -38,6 +38,6 @@ export default {
     Language,
     Link,
     Random,
-    video,
     Rem,
+    video,
 };

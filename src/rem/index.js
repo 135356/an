@@ -28,4 +28,4 @@ class Rem {
     }
 }
 
-export default new Rem;
+export default Rem;
