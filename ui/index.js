@@ -11,6 +11,7 @@ import SelectCheckbox from './src/Select/Checkbox.vue';
 import SelectRadio from './src/Select/Radio.vue';
 import SelectSelect from './src/Select/Select.vue';
 import AnSelectSelectDate from './src/Select/SelectDate.vue';
+import Search from './src/Search';
 
 const components = [
     AlertText,
@@ -26,6 +27,7 @@ const components = [
     SelectRadio,
     SelectSelect,
     AnSelectSelectDate,
+    Search,
 ];
 
 const install = function(Vue, opts = {}) {
@@ -58,4 +60,5 @@ export default {
     SelectRadio,
     SelectSelect,
     AnSelectSelectDate,
+    Search,
 };

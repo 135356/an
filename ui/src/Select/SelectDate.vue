@@ -81,10 +81,10 @@
                                     let b=setInterval(()=>{
                                         i++;
                                         this_.generateF();
-                                        if(i>6){
+                                        if(i>12){
                                             clearInterval(b);
                                         }
-                                    },100);
+                                    },40);
                                 }else{
                                     this_.generateF();
                                 }
@@ -188,7 +188,8 @@
                     move:{
                         stateX:0,//左右状态
                         stateY:0,//上下状态
-                        space:8,//间隔
+                        space:8,//间隔次
+                        space_time:300,//间隔时间
                         clientX_arr:[],
                         clientY_arr:[],
                         xF(type)
@@ -196,15 +197,39 @@
                             this.stateX=0;
                             this.clientX_arr=[];
                         },
-                        yF(type,this_)
+                        yF(type,this_,quicken)
                         {
-                            this.stateY=0;
                             this.clientY_arr=[];
                             if(type){
-                                this_.generateF();
+                                if(quicken){
+                                    let i=0;
+                                    let b=setInterval(()=>{
+                                        i++;
+                                        this_.generateF();
+                                        if(i>3){
+                                            clearInterval(b);
+                                        }
+                                    },100);
+                                }else{
+                                    this_.generateF();
+                                }
                             }else{
-                                this_.generate1F();
+                                if(quicken){
+                                    let i=0;
+                                    let b=setInterval(()=>{
+                                        i++;
+                                        this_.generate1F();
+                                        if(i>3){
+                                            clearInterval(b);
+                                        }
+                                    },100);
+                                }else{
+                                    this_.generate1F();
+                                }
                             }
+                            setTimeout(()=>{
+                                this.stateY=0;
+                            }, this.space_time);
                         }
                     },
                     generateF(v)
@@ -249,10 +274,18 @@
                             if(this.move.clientY_arr.length>this.move.space){
                                 if(!this.move.stateY){
                                     this.move.stateY=1;
-                                    if(this.move.clientY_arr[this.move.clientY_arr.length-this.move.space+1] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
-                                        this.move.yF(1,this);
+                                    if(Math.abs(this.move.clientY_arr[this.move.clientY_arr.length-1]-this.move.clientY_arr[this.move.clientY_arr.length-(this.move.space+1)])>50){
+                                        if(this.move.clientY_arr[this.move.clientY_arr.length-2] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
+                                            this.move.yF(1,this,1);
+                                        }else{
+                                            this.move.yF(0,this,1);
+                                        }
                                     }else{
-                                        this.move.yF(0,this);
+                                        if(this.move.clientY_arr[this.move.clientY_arr.length-2] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
+                                            this.move.yF(1,this);
+                                        }else{
+                                            this.move.yF(0,this);
+                                        }
                                     }
                                 }
                             }
@@ -274,7 +307,8 @@
                     move:{
                         stateX:0,//左右状态
                         stateY:0,//上下状态
-                        space:8,//间隔
+                        space:8,//间隔次
+                        space_time:300,//间隔时间
                         clientX_arr:[],
                         clientY_arr:[],
                         xF(type)
@@ -282,15 +316,39 @@
                             this.stateX=0;
                             this.clientX_arr=[];
                         },
-                        yF(type,this_)
+                        yF(type,this_,quicken)
                         {
-                            this.stateY=0;
                             this.clientY_arr=[];
                             if(type){
-                                this_.generateF();
+                                if(quicken){
+                                    let i=0;
+                                    let b=setInterval(()=>{
+                                        i++;
+                                        this_.generateF();
+                                        if(i>6){
+                                            clearInterval(b);
+                                        }
+                                    },80);
+                                }else{
+                                    this_.generateF();
+                                }
                             }else{
-                                this_.generate1F();
+                                if(quicken){
+                                    let i=0;
+                                    let b=setInterval(()=>{
+                                        i++;
+                                        this_.generate1F();
+                                        if(i>6){
+                                            clearInterval(b);
+                                        }
+                                    },100);
+                                }else{
+                                    this_.generate1F();
+                                }
                             }
+                            setTimeout(()=>{
+                                this.stateY=0;
+                            }, this.space_time);
                         }
                     },
                     generateF(v)
@@ -335,10 +393,18 @@
                             if(this.move.clientY_arr.length>this.move.space){
                                 if(!this.move.stateY){
                                     this.move.stateY=1;
-                                    if(this.move.clientY_arr[this.move.clientY_arr.length-this.move.space+1] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
-                                        this.move.yF(1,this);
+                                    if(Math.abs(this.move.clientY_arr[this.move.clientY_arr.length-1]-this.move.clientY_arr[this.move.clientY_arr.length-(this.move.space+1)])>50){
+                                        if(this.move.clientY_arr[this.move.clientY_arr.length-2] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
+                                            this.move.yF(1,this,1);
+                                        }else{
+                                            this.move.yF(0,this,1);
+                                        }
                                     }else{
-                                        this.move.yF(0,this);
+                                        if(this.move.clientY_arr[this.move.clientY_arr.length-2] > this.move.clientY_arr[this.move.clientY_arr.length-1]) {
+                                            this.move.yF(1,this);
+                                        }else{
+                                            this.move.yF(0,this);
+                                        }
                                     }
                                 }
                             }
