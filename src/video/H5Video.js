@@ -1,5 +1,5 @@
 /*多个视频点击前就自动加载了视频仅控制是否播放*/
-class H5 {
+class H5Video {
     state=false;
     elem={};
     volume=0;//音量
@@ -55,7 +55,7 @@ class H5 {
     }
 
     /*播放*/
-    playMp4(e)
+    play(e)
     {
         this.elem_(e);
         if(this.state){
@@ -65,7 +65,7 @@ class H5 {
     }
 
     /*暂停*/
-    pauseMp4()
+    pause()
     {
         if(this.state){
             this.elem.pause();
@@ -75,4 +75,4 @@ class H5 {
     }
 }
 
-export default H5;
+export default H5Video;

@@ -16,11 +16,11 @@ const install = function(Vue, opts = {}) {
     Vue.prototype.$An_language=new Language(Vue.prototype.$An_link.get('ipcode'));
     Vue.prototype.$An_random=new Random();
     Vue.prototype.$An_rem=new Rem();
-    Vue.prototype.$An_video=new video();
     Vue.prototype._=(value)=>{return Vue.prototype.$An_language.to(value)};
     Vue.filter('_',(value)=>{
         return Vue.prototype.$An_language.to(value);
     });
+    new video(Vue.prototype);
     Vue.prototype.$An_rem.set();
     Vue.prototype.$An_data.load.model=2; //1进度条,2转圈圈
 };
