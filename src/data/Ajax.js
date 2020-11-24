@@ -83,7 +83,7 @@ class Ajax {
                 type:"all",
                 totalcount: 1, //上传总数，每调用一次上传一张
                 iscroppic:this.isIOS(), //是否ios终端
-                from:"AddInfo", //未发现作用
+                from:"idcard", //未发现作用
                 onSuccess: function(data){
                     let type = data.photos[0].split('.')[1];
                     if (type==='png' || type==='gif' || type==='jpeg' || type==='jpg' || type==='bmp'){
@@ -148,6 +148,27 @@ class Ajax {
                 }
             }
         });
+    }
+
+    /*安卓下载图片*/
+    downloadMedia(file)
+    {
+        let photolist = [];
+        photolist.push(file);
+        price.callPhotoGallery({
+            photos: photolist,
+            index: 0,
+            onSuccess: function(data){}
+        });
+    }
+
+    /*下载图片常用*/
+    downloadMedia1(img_link)
+    {
+        let a = document.createElement('a')
+        a.download = name || 'pic'
+        a.href = img_link;// 设置图片地址
+        a.click();
     }
 }
 

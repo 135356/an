@@ -1,6 +1,5 @@
 import Local from './Local'
 import Ajax from './Ajax'
-import Api from './Api'
 
 function mix(...mixins) {
     class Mix {
@@ -31,7 +30,7 @@ function copyProperties(target, source) {
     }
 }
 
-class Data extends mix(Local,Ajax,Api) {
+class Data extends mix(Local,Ajax) {
     user_id = ''; //在调用了login登录之后才会有
     link_get = []; //链接里的参数
     is_repeatedly_ = 0; //开始请求时为真，避免多个重复请求
@@ -43,9 +42,9 @@ class Data extends mix(Local,Ajax,Api) {
     this_(this_) {
         this.this__ = this_;
         this.link_get = this.this__.$An_link.get();
-        this.this__.$store.dispatch('login', this.link_get).then((res)=>{
+        /*this.this__.$store.dispatch('login', this.link_get).then((res)=>{
             this.user_id=res.id;
-        });//vuex登录保存
+        });*///vuex登录保存
         return this;
     }
 

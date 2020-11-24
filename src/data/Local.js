@@ -86,7 +86,7 @@ class Local {
     getLocal_(name, id) {
         let time = localStorage.getItem(this.name_ + 'time' + name);
         if (time && parseInt(time) < parseInt(Date.now() / 1000)) {
-            this.deleteLocal(name);
+            this.deleteLocal_(name);
             return '';
         } else {
             let data = localStorage.getItem(this.name_ + name);
@@ -132,7 +132,7 @@ class Local {
     deleteLocal_(name, id) {
         let data = localStorage.getItem(this.name_ + name);
         if (data) {
-            if (Object.prototype.toString.call(id) == '[object Number]') {
+            if (id&&Object.prototype.toString.call(id) === '[object Number]') {
                 let str_i = data.indexOf(this.separator_);
                 if (str_i != -1) {
                     data = data.split(this.separator_);
