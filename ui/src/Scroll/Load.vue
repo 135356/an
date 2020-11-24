@@ -75,6 +75,10 @@
                                     }, 2000);
                                 }
                             }
+                        }else{
+                            if(scrollTop<800){
+                                this.refresh=0;
+                            }
                         }
                     });
                 };
