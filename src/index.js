@@ -6,6 +6,7 @@ import Link from './link/index.js';
 import Random from './random/index.js';
 import Rem from './rem/index.js';
 import video from './video/index.js';
+import Address from './address/index.js';
 
 const install = function(Vue, opts = {}) {
     Vue.prototype.$An=new Ccc();
@@ -16,6 +17,7 @@ const install = function(Vue, opts = {}) {
     Vue.prototype.$An_language=new Language(Vue.prototype.$An_link.get('ipcode'));
     Vue.prototype.$An_random=new Random();
     Vue.prototype.$An_rem=new Rem();
+    Vue.prototype.$An_address=new Address();
     Vue.prototype._=(value)=>{return Vue.prototype.$An_language.to(value)};
     Vue.filter('_',(value)=>{
         return Vue.prototype.$An_language.to(value);
@@ -40,4 +42,5 @@ export default {
     Random,
     Rem,
     video,
+    Address,
 };
