@@ -1,65 +1,54 @@
 <template>
     <div class="container" @click.stop="selectF()">
-        <div :class="{'active':select}"><i class="an1_iconfont">&#xe61c;</i></div>
+        <slot></slot>
     </div>
 </template>
 
 <script>
     export default {
         name: "AnSelectCheckbox",
-        props: {index_:Number,value_:String|Number,select_:Boolean|Number},
+        props: {'select_index_':Number|String,'index_':Number|String,'data_':Array},
         data() {
             return {
-                select:this.select_,
-                value:this.value_,
+                index:0,
+                data:'',
+                select_index:this.select_index_,
             }
         },
         watch: {
-            select_(val)
+            select_index_(val)
             {
-                this.select=val;
+                this.select_index=val;
             },
-            value_(val)
+            index_(v)
             {
-                this.value=val;
+                this.index=v;
+            },
+            data_(v)
+            {
+                this.data=v;
             }
         },
         methods: {
             selectF() {
-                this.select=!this.select;
-                this.$emit('AnSelectCheckboxF', {'index':this.index_,'val':this.value,'select':this.select});
+                this.$emit('AnSelectCheckboxF', {'index':this.index});
             }
         },
         created() {},
-        mounted() {},
+        mounted() {
+            if(this.index_){
+                this.index=this.index_;
+            }
+            if(this.data_){
+                this.data=this.data_;
+            }
+        },
         destroyed() {}
     }
 </script>
 
 <style scoped lang="scss">
-    .container {
+    .content{
         display:inline-block;
-        div{
-            width:21px;
-            height:21px;
-            line-height: 21px;
-            border-radius:3px;
-            display:inline-block;
-            text-align: center;
-            border:solid 1px #eee;
-            background:#fff;
-            i{
-                color:#fff;
-                visibility: hidden;
-            }
-        }
-        div.active{
-            border:solid 1px #2299ff;
-            background:#3399ff;
-            i{
-                color:#fff;
-                visibility: visible;
-            }
-        }
     }
 </style>

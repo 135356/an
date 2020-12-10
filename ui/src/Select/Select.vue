@@ -8,7 +8,7 @@
                 <ul>
                     <li v-for="(v,i) in data" @click.stop="selectF(i)" :class="{'active':v.value == value}">{{v.name}}</li>
                 </ul>
-                <div style="width:100%;height:60px;"></div>
+                <div class="close_"></div>
                 <div @click.stop="closeF()" class="close">{{'取消'|_}}</div>
             </div>
             <div @click.stop="closeF()" class="mask"></div>
@@ -127,6 +127,10 @@
                     }
                 }
 
+                .close_{
+                    width:100%;
+                    height:60px;
+                }
                 .close {
                     position: fixed;
                     bottom: 0;

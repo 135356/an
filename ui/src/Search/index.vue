@@ -166,7 +166,7 @@
             if(this.is_focus_){
                 this.autoFocusF();
             }
-            this.getStorage();
+            //this.getStorage();
         },
     }
 </script>
@@ -176,8 +176,9 @@
         position:relative;
         z-index: 8;
         width:95%;
-        height:5rem;
-        margin:0.833rem auto;
+        height:30px;
+        margin:0 auto;
+        padding:5px 0;
         table.aa1{
             position:relative;
             z-index: 9;
@@ -194,8 +195,8 @@
                         width:80%;
                         margin:auto;
                         img{
-                            width:2.333rem;
-                            height:2.167rem;
+                            width:14px;
+                            height:13px;
                             vertical-align: middle;
                             object-fit: fill;
                         }
@@ -231,27 +232,27 @@
             position:relative;
             z-index: 9;
             width:100%;
-            max-height:43.333rem;
+            max-height:260px;
             overflow:auto;
             border-radius:3px;
             li{
                 position:relative;
                 width:100%;
-                height:6.667rem;
-                line-height: 6.667rem;
-                font-size:2rem;
+                height:40px;
+                line-height: 40px;
+                font-size:12px;
                 text-align: left;
                 border-bottom:solid 1px #fafafa;
                 background: #fff;
                 .time{
                     position:absolute;
-                    top:50%;left:0.833rem;
+                    top:50%;left:5px;
                     transform:translate(0,-50%);
                     color:#f2f2f2;
                 }
                 .aaa2{
                     position:absolute;
-                    top:50%;left:5rem;
+                    top:50%;left:30px;
                     transform:translate(0,-50%);
                     width:75%;
                     height:100%;
@@ -261,7 +262,7 @@
                 }
                 .x{
                     position:absolute;
-                    top:50%;right:0.833rem;
+                    top:50%;right:5px;
                     transform:translate(0,-50%);
                     color:#f2f2f2;
                 }
