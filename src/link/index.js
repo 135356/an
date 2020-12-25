@@ -19,7 +19,6 @@ class Link {
     link里没有 / 则是以name跳转并使用的是params传参
     */
     to(link, data) {
-
         let number = link ? parseInt(link) : 0;
         if (number || number == 0) {
             window.history.go(number);
@@ -31,13 +30,17 @@ class Link {
             if (link.indexOf('//') != -1) {
                 window.location.href = link;
                 return;
-            } else if (link.indexOf('/') != -1) {//链接地址
+            } else if ((/^\//).test(link)) {//链接地址
                 data_['path'] = link;
                 if (data) {
                     data_['query'] = data;
                 }
             } else {
-                data_['name'] = link;
+                if ((/^:/).test(link)){
+                    data_['name'] = link.substr(1);
+                }else{
+                    data_['name'] = link;
+                }
                 if (data) {
                     data_['params'] = data;
                 }
@@ -71,9 +74,12 @@ class Link {
         if (this_) {
             Object.assign(data1, this_.$route.query);
             if (key) {
-                let result = /^:/;
-                if (result.test(key)) {
-                    return this_.$route.params[key.replace(result, '')];
+                if ((/^:/).test(key)) {
+                    if(key.substr(1)){
+                        return this_.$route.params[key.substr(1)];
+                    }else{
+                        return this_.$route.params;
+                    }
                 } else {
                     return data1[key];
                 }
