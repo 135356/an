@@ -58,11 +58,11 @@
                 this.show=false;
                 this.select_index = i;
                 this.value = this.data[i].value;
-                this.$emit('AnSelectSelectF', {'show':this.show,'value': this.value,'index':this.select_index});
+                this.$emit('AnSelectSelectF', {'show':this.show,'value': this.value,'index':this.select_index,'type':'select'});
             },
             closeF() {
                 this.show=false;
-                this.$emit('AnSelectSelectF', {'show':this.show,'value': this.value,'index':this.select_index});
+                this.$emit('AnSelectSelectF', {'show':this.show,'value': this.value,'index':this.select_index,'type':'close'});
             }
         },
         created() {},
@@ -112,13 +112,14 @@
                     font-size: 16px;
 
                     .active {
+                        color:#666;
                         background: #f6f6f6;
                     }
 
                     li {
                         width: 100%;
-                        height: 40px;
-                        line-height: 40px;
+                        height: 45px;
+                        line-height: 45px;
                         margin: auto;
                         overflow: hidden;
                         white-space: nowrap;
@@ -129,7 +130,7 @@
 
                 .close_{
                     width:100%;
-                    height:60px;
+                    height:65px;
                 }
                 .close {
                     position: fixed;
@@ -137,11 +138,12 @@
                     width: 100%;
                     height: 60px;
                     line-height: 40px;
+                    font-size: 16px;
                     text-align: center;
                     border-top: 5px solid #ddd;
                     border-bottom: none;
-                    color: #666;
-                    background: #f6f6f6;
+                    color: #777;
+                    background: #ddd;
                 }
             }
         }

@@ -1,188 +1,205 @@
-class Address{
-  this__='';
-  /*后台请求到的数据*/
-  out_y={
-    'country':0,//国
-    'province':0,//省
-    'city':0,//市
-    'area':0,//区
-  }
-  /*过滤好的地址*/
-  out_i={
-    'mobile':'',//移动电话
-    'phone':'',//固定电话
-    'zip_code':'',//邮政编码
-    'user_name':'',//用户名
-    'country':0,//国
-    'province':0,//省
-    'city':0,//市
-    'area':0,//区
-    'detailed':0,//详细地址
-  };
-  /*需要去掉的文字*/
-  filtered={
-    special:['县','区','旗','市','盟','州'],/*特殊地区*/
-    province:['特别行政区', '古自治区', '维吾尔自治区', '壮族自治区', '回族自治区', '自治区', '省省直辖', '省', '市'],//省
-    city:['布依族苗族自治州', '苗族侗族自治州', '自治州', '州', '市', '县'],//市
-    other:['地址', '收货地址', '收货人', '收件人', '收货', '邮编', '电话', '手机号码','所在地区','：', ':', '；', ';', '，', ',', '。',' '],//其它
-  }
-  /*用户输入的地址*/
-  address='';
-
-  constructor()
-  {}
-
-  this_(this_) {
-    this.this__ = this_;
-    return this;
-  }
-
-  /*设置地址*/
-  setAddress(address)
-  {
-    this.address=address;
-    this.filtered.other.forEach(str => {
-      this.address = this.address.replace(new RegExp(str, 'g'), ' ')
-    });
-    //多个空格替换为一个
-    this.address = this.address.replace(/ {2,}/g, ' ');
-  }
-
-  /*过滤电话*/
-  filterPhone()
-  {
-    this.address=this.address.replace(/(\d{3})-(\d{4})-(\d{4})/g, '$1$2$3'); //整理电话格式
-    //移动电话
-    let mobile = (/(86-[1][0-9]{10})|(86[1][0-9]{10})|([1][0-9]{10})/g).exec(this.address);
-    if (mobile) {
-      this.out_i.mobile = mobile[0];
-      this.address = this.address.replace(mobile[0], ' ');
-    }
-    //固话
-    let phone = (/(([0-9]{3,4}-)[0-9]{7,8})|([0-9]{12})|([0-9]{11})|([0-9]{10})|([0-9]{9})|([0-9]{8})|([0-9]{7})/g).exec(this.address);
-    if (phone) {
-      this.out_i.phone = phone[0];
-      this.address = this.address.replace(phone[0], ' ');
-    }
-  }
-
-  /*正向匹配*/
-  filter(yF,iF,addr,type) {
-    type=type||'country';
-    let is=0;
-    let index_of=-1;
-    this.this__.$An_data.getAddress(addr).then(res => {
-        if(res['country']){
-          switch (type) {
-            case 'country':
-              for(let k in res['country']){
-                index_of=this.address.indexOf(k);
-                if(index_of>-1){
-                  is=1;
-                  this.out_i.country=res['country'][k];
-                  this.address = this.address.replace(k,'');
-                  this.filter(yF,iF,{'country':res['country'][k]['id']},'province');
-                  break;
-                }
-              }
-              if(!is){
-                this.out_i.country=res['country']['中国'];
-                this.filter(yF,iF,{'country':res['country']['中国']['id']},'province');
-              }
-              break;
-            case 'province':
-              is=0;
-              if(res['province']){
-                this.out_y=res;
-                for(let k in res['province']){
-                  index_of=this.address.indexOf(k);
-                  if (index_of > -1) {
-                    is=1;
-                    if (index_of > 0) {//省份不在第一位，将省份之前的字段截取出来识别为名称
-                      this.out_i.user_name = this.address.substr(0, index_of).trim();
-                    }
-                    this.out_i.province = res['province'][k];
-                    this.address = this.address.substr(index_of + k.length);
-                    for (let kk in this.filtered.province) {
-                      if (this.address.indexOf(this.filtered.province[kk]) === 0) {
-                        this.address = this.address.substr(this.filtered.province[kk].length);
-                      }
-                    }
-                    this.filter(yF,iF,Object.assign(addr,{'province':res['province'][k]['id']}),'city');
-                    break;
-                  }
-                }
-                if(!is){
-                  this.out_i['province']=0;
-                  this.out_i['city']=0;
-                  this.out_i['area']=0;
-                  this.out_i.detailed=this.address;
-                  iF(this.out_i);
-                  yF(this.out_y);
-                }
-              }
-              break;
-            case 'city':
-              is=0;
-              if(res['city']){
-                this.out_y=res;
-                for(let k in res['city']){
-                  index_of=this.address.indexOf(k);
-                  if (index_of > -1 && index_of < 3) {
-                    is=1;
-                    this.out_i.city = res['city'][k];
-                    this.address = this.address.substr(index_of + k.length);
-                    for (let kk in this.filtered.city) {
-                      if (this.address.indexOf(this.filtered.city[kk]) === 0) {
-                        this.address = this.address.substr(this.filtered.city[kk].length);
-                      }
-                    }
-                    this.filter(yF,iF,Object.assign(addr,{'city':res['city'][k]['id']}),'area');
-                    break;
-                  }
-                }
-                if(!is){
-                  this.out_i['city']=0;
-                  this.out_i['area']=0;
-                  this.out_i.detailed=this.address;
-                  iF(this.out_i);
-                  yF(this.out_y);
-                }
-              }
-              break;
-            case 'area':
-              is=0;
-              this.out_y=res;
-              if(res['area']){
-                for(let k in res['area']){
-                  index_of=this.address.indexOf(k);
-                  if (index_of > -1 && index_of < 3) {
-                    is=1;
-                    this.out_i.area = res['area'][k];
-                    this.address = this.address.substr(index_of + k.length);
-                    this.out_i.detailed = this.address.trim();
-                    iF(this.out_i);
-                    break;
-                  }
-                }
-                if(!is){
-                  this.out_i['area']=0;
-                  iF(this.out_i);
-                }
-              }
-              yF(this.out_y);
-              break;
-          }
+class Address {
+    this__ = '';
+    data = {
+        country:'',
+        province:'',
+        city:'',
+        area:'',
+        other:{
+            name:'', //收货人姓名
+            phone:'', //收货人手机号
+            tel:'', //收货人固话
+            postcode:'', //邮编
+            detailed:'', //详细地址信息
         }
-      });
-  }
+    };
+    /*需要去掉的文字*/
+    filtered = {
+        special: ['县', '区', '旗', '市', '盟', '州'],/*特殊地区*/
+        province: ['特别行政区', '古自治区', '维吾尔自治区', '壮族自治区', '回族自治区', '自治区', '省省直辖', '省', '市'],//省
+        city: ['布依族苗族自治州', '苗族侗族自治州', '自治州', '州', '市', '县'],//市
+        other: ['地址', '收货地址', '收货人', '收件人', '收货', '邮编', '电话', '手机号码', '所在地区', '：', ':', '；', ';', '，', ',', '。', ' '],//其它
+    }
+    /*用户输入的地址*/
+    address = '';
 
-  getCity(address,yF,iF)
-  {
-    this.setAddress(address);
-    this.filterPhone();
-    this.filter(yF,iF);
-  }
+    constructor() {
+    }
+
+    this_(this_) {
+        this.this__ = this_;
+        return this;
+    }
+
+    /*设置地址*/
+    setAddress(address) {
+        this.address = address;
+        this.filtered.other.forEach(str => {
+            this.address = this.address.replace(new RegExp(str, 'g'), ' ')
+        });
+        //多个空格替换为一个
+        this.address = this.address.replace(/ {2,}/g, ' ');
+    }
+
+    /*过滤电话*/
+    filterPhone() {
+        this.address = this.address.replace(/(\d{3})-(\d{4})-(\d{4})/g, '$1$2$3'); //整理电话格式
+        let r_data={'phone':'','tel':''};
+        //移动电话
+        let mobile = (/(86-[1][0-9]{10})|(86[1][0-9]{10})|([1][0-9]{10})/g).exec(this.address);
+        if (mobile) {
+            r_data['phone']=mobile[0];
+            this.address = this.address.replace(mobile[0], ' ');
+        }
+        //固话
+        let tel = (/(([0-9]{3,4}-)[0-9]{7,8})|([0-9]{12})|([0-9]{11})|([0-9]{10})|([0-9]{9})|([0-9]{8})|([0-9]{7})/g).exec(this.address);
+        if (tel) {
+            r_data['tel']=tel[0];
+            this.address = this.address.replace(tel[0], ' ');
+        }
+        return r_data;
+    }
+
+    getCountry(){
+        let is = 0;
+        let index_of = -1;
+        return new Promise((resolve)=>{
+            this.this__.$An_data.getCountry().then(res => {
+                let r_data={'data':res,'select_i':-1};
+                for (let i=0;i<res.length;i++) {
+                    index_of = this.address.indexOf(res[i]['name']);
+                    if (index_of > -1) {
+                        is = 1;
+                        r_data['select_i'] = i;
+                        this.address = this.address.replace(res[i]['name'], '');
+                    }
+                }
+                if (!is) {
+                    r_data['select_i'] = 3; //默认中国
+                }
+                resolve(r_data);
+            });
+        });
+    }
+
+    getProvince(data){
+        let is = 0;
+        let index_of = -1;
+        return new Promise((resolve)=>{
+            this.this__.$An_data.getProvince(data).then(res => {
+                let r_data={'data':res,'select_i':-1};
+                for (let i=0;i<res.length;i++) {
+                    index_of = this.address.indexOf(res[i]['name']);
+                    if (index_of > -1) {
+                        is = 1;
+                        r_data['select_i'] = i;
+                        if (index_of > 0) {//省份不在第一位，将省份之前的字段截取出来识别为收货人名称
+                            this.data.other.name = this.address.substr(0, index_of).trim();
+                        }
+                        this.address = this.address.substr(index_of + res[i]['name'].length);
+                        for (let k in this.filtered.province) {
+                            if (this.address.indexOf(this.filtered.province[k]) === 0) {
+                                this.address = this.address.substr(this.filtered.province[k].length);
+                            }
+                        }
+
+                    }
+                }
+                resolve(r_data);
+            });
+        });
+    }
+
+    getCity(data){
+        let is = 0;
+        let index_of = -1;
+        return new Promise((resolve)=>{
+            this.this__.$An_data.getCity(data).then(res => {
+                let r_data={'data':res,'select_i':-1};
+                for (let i=0;i<res.length;i++) {
+                    index_of = this.address.indexOf(res[i]['name']);
+                    if (index_of > -1 && index_of < 3) {
+                        is = 1;
+                        r_data['select_i'] = i;
+                        this.address = this.address.substr(index_of + res[i]['name'].length);
+                        for (let k in this.filtered.city) {
+                            if (this.address.indexOf(this.filtered.city[k]) === 0) {
+                                this.address = this.address.substr(this.filtered.city[k].length);
+                            }
+                        }
+                    }
+                }
+                resolve(r_data);
+            });
+        });
+    }
+
+    getArea(data){
+        let is = 0;
+        let index_of = -1;
+        return new Promise((resolve)=>{
+            this.this__.$An_data.getArea(data).then(res => {
+                let r_data={'data':res,'select_i':-1};
+                for (let i=0;i<res.length;i++) {
+                    index_of = this.address.indexOf(res[i]['name']);
+                    if (index_of > -1 && index_of < 3) {
+                        is = 1;
+                        r_data['select_i'] = i;
+                        this.address = this.address.substr(index_of + res[i]['name'].length);
+                        this.data.other.detailed = this.address;
+                    }
+                }
+                resolve(r_data);
+            });
+        });
+    }
+
+    antiClockwise(){}
+
+    /*正向匹配*/
+    clockwise(address,tipsF) {
+        return new Promise((resolve)=>{
+            this.setAddress(address);
+            let phone = this.filterPhone();
+            this.data.other.tel=phone['tel'];
+            this.data.other.phone=phone['phone'];
+            this.getCountry().then(res=>{
+                this.data.country=res;
+                if(res['select_i']>-1){
+                    this.getProvince({'id':res['data'][res['select_i']]['id']}).then(res=>{
+                        this.data.province=res;
+                        if(res['select_i']>-1){
+                            this.getCity({'id':res['data'][res['select_i']]['id']}).then(res=>{
+                                this.data.city=res;
+                                if(res['select_i']>-1){
+                                    this.getArea({'id':res['data'][res['select_i']]['id']}).then(res=>{
+                                        this.data.area=res;
+                                        resolve(this.data);
+                                        if(res['select_i']<0){
+                                            tipsF('alertA','未识别到：区');
+                                        }
+                                    });
+                                }else{
+                                    resolve(this.data);
+                                    tipsF('alertA','未识别到：市');
+                                }
+                            });
+                        }else{
+                            resolve(this.data);
+                            tipsF('alertA','未识别到：省');
+                        }
+                    });
+                }else{
+                    resolve(this.data);
+                    tipsF('alertA','未识别到：国家');
+                }
+            });
+        });
+    }
+
+    aiArea(address) {
+        return this.clockwise(address);
+    }
 }
 
 export default Address;
