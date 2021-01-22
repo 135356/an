@@ -4,13 +4,6 @@ class Local {
     max_length_ = 1500;//add存储时的最大长度
     separator_ = '_;_';//add分隔符
 
-    /*区别用户存储*/
-    user(user_id) {
-        if (user_id) {
-            this.user_id = user_id;
-        }
-    }
-
     /*终端*/
     getUA()
     {
@@ -43,14 +36,14 @@ class Local {
         return new Promise((resolve) => {
             this.repeatedly_(20).then(res => {
                 if (res) {
-                    resolve(this.createLocal_(this.user_id+name, data, time));
+                    resolve(this.createLocal_(this.user_data.id+name, data, time));
                 }
             });
         });
     }
 
     /*在原数据基础上从后面追加,time为秒*/
-    addLocal_(name, data, time) {
+    addLocal_(name, data, time,max_length) {
         switch (Object.prototype.toString.call(data)) {
             case '[object Object]':
                 data = JSON.stringify(data);
@@ -66,6 +59,8 @@ class Local {
         if (data2) {
             if (data2.length > this.max_length_) {
                 data2 = data2.substr(parseInt(this.max_length_ / 2)).replace(/^_;_|^;_|^_/g, '');
+            }else if(max_length && data2.length>max_length){
+                data2 = data2.substr(parseInt(max_length / 2)).replace(/^_;_|^;_|^_/g, '');
             }
             return localStorage.setItem(this.name_ + name, data2 + this.separator_ + data);
         } else {
@@ -73,11 +68,11 @@ class Local {
         }
     }
 
-    addLocal(name, data, time) {
+    addLocal(name, data, time,max_length) {
         return new Promise((resolve) => {
             this.repeatedly_(20).then(res => {
                 if (res) {
-                    resolve(this.addLocal_(this.user_id+name, data, time));
+                    resolve(this.addLocal_(this.user_data.id+name, data, time,max_length));
                 }
             });
         });
@@ -123,7 +118,7 @@ class Local {
         return new Promise((resolve) => {
             this.repeatedly_(20).then(res => {
                 if (res) {
-                    resolve(this.getLocal_(this.user_id+name, id));
+                    resolve(this.getLocal_(this.user_data.id+name, id));
                 }
             });
         });
@@ -132,7 +127,7 @@ class Local {
     deleteLocal_(name, id) {
         let data = localStorage.getItem(this.name_ + name);
         if (data) {
-            if (id&&Object.prototype.toString.call(id) === '[object Number]') {
+            if(id !== '' && id != null && !isNaN(id) && typeof id === 'number') {
                 let str_i = data.indexOf(this.separator_);
                 if (str_i != -1) {
                     data = data.split(this.separator_);
@@ -153,7 +148,7 @@ class Local {
         return new Promise((resolve) => {
             this.repeatedly_(20).then(res => {
                 if (res) {
-                    resolve(this.deleteLocal_(this.user_id+name, id));
+                    resolve(this.deleteLocal_(this.user_data.id+name, id));
                 }
             });
         });
