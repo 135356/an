@@ -23,7 +23,7 @@ class Link {
         if (number || number == 0) {
             window.history.go(number);
             //this_.$router.go(number);
-        } else if(link==='close'){
+        } else if(link.toLowerCase()==='close'){
             price.closeWeb({}); //关闭
         }else{
             let data_ = {};
@@ -57,20 +57,24 @@ class Link {
     接收params参数时key应该为:key，params的key在路由层定义的
     */
     get(key) {
-        let get = decodeURIComponent(window.location.search).replace(/\?\?/i, '?');
         let data = [];
         let data1 = {};
         let this_ = this.this__;
+        let get=window.location.href.replace(/(\?)|(#)/ig, '&');
+        get=get.substr(get.indexOf('&'));
         if (get) {
-            get = get.replace(/\?/i, '');
+            get=get.replace(/(\/)|(\\)/ig, '&');
+            get=get.replace(/&{2,}/ig, '&');
+            get=get.replace(/^&|&$/ig, '');
             get = get.split('&');
             for (let i = 0; i < get.length; i++) {
                 data = get[i].split('=');
-                if (data[0]) {
+                if (data[1]) {
                     data1[data[0]] = data[1];
                 }
             }
         }
+
         if (this_) {
             Object.assign(data1, this_.$route.query);
             if (key) {
