@@ -1,5 +1,5 @@
 <template>
-    <div class="an_banner" @mouseenter="hoverEnterF()" @mouseleave="hoverLeaveF()">
+    <div class="an_banner" @touchstart.stop="touch.startF($event)" @touchmove.stop="touch.moveF($event)" @touchend.stop="touch.endF($event)">
         <div class="an_banner_c">
             <slot></slot>
         </div>
@@ -29,6 +29,7 @@ export default {
                 number_banner:0, //轮播图个数
                 current_index:1, //当前索引
                 width:'', //元素最大宽度
+                height:'', //元素最大高度
             },
             dom:{
                 img_div:'',
@@ -36,6 +37,48 @@ export default {
                 tab_active_i:1,
                 button_left_show:0,
                 button_right_show:0,
+            },
+            touch:{
+                x:0,
+                y:0,
+                state:0,
+                timeout:'',
+                left:()=>{
+                    if(!this.touch.state){
+                        this.touch.state=1;
+                        this.touch.timeout = setTimeout(()=>{
+                            this.touch.state=0;
+                        }, 800);
+                        this.leftF();
+                    }
+                },
+                right:()=>{
+                    if(!this.touch.state){
+                        this.touch.state=1;
+                        this.touch.timeout = setTimeout(()=>{
+                            this.touch.state=0;
+                        }, 800);
+                        this.rightF();
+                    }
+                },
+                startF(e){/*触摸控件时*/
+                    this.x=e.touches[0].clientX;
+                    this.y=e.touches[0].clientY;
+                    clearInterval(this.timeout);
+                },
+                moveF(e){/*滑动时*/
+                    if (e.changedTouches.length) {
+                        if(e.touches[0].clientX>this.x){
+                            this.left();
+                        }else if(e.touches[0].clientX<this.x){
+                            this.right();
+                        }
+                    }
+                },
+                endF(e){
+                    this.state=0;
+                    clearInterval(this.timeout);
+                },
             }
         }
     },
@@ -89,6 +132,7 @@ export default {
                     this.play(-(this.banner['width'] * this.banner['current_index']),this.banner['current_index']);
                 }
             }
+            this.resetTimerF();
         },
         /*向右移动*/
         rightF(){
@@ -100,31 +144,36 @@ export default {
                     this.play(-(this.banner['width'] * this.banner['current_index']),this.banner['current_index']);
                 }
             }
+            this.resetTimerF();
         },
         //指示灯点击时
         tabF(i){
             this.dom['tab_active_i']=i;
             //点击时到达临界值
             if (i === 0 && this.banner['current_index'] === this.dom['img_div_length']) {
-                this.banner['current_index']++;
-                this.playEnd(1);
+                this.playEnd(1,'left');
             }else if(i === (this.dom['img_div_length'] -1) && this.banner['current_index'] === 1) {
-                this.banner['current_index']--;
-                this.playEnd(this.dom['img_div_length']);
+                this.playEnd(this.dom['img_div_length'],'right');
             }else {
                 //设置所点击的元素class,并移动到指示灯所在图片
-                this.play(-(this.banner['width'] * (i+1)),(i+1));
-                this.banner['current_index'] = i+1;
+                this.play(-(this.banner['width'] * i),i);
             }
+            this.banner['current_index']=i;
+            this.resetTimerF();
         },
         //鼠标悬停在轮播上时
-        hoverEnterF(){
+        deleteTimerF(){
             clearInterval(this.timeout['obj']);
         },
         //鼠标摞开时启动定时器
-        hoverLeaveF(){
+        startTimerF(){
             this.autoPlay(this.timeout['time']); //页面打开后自动开启播放
         },
+        //重置定时器
+        resetTimerF(){
+            this.deleteTimerF();
+            this.startTimerF();
+        }
     },
     watch:{},
     created(){},
@@ -134,22 +183,23 @@ export default {
                 if(this.$slots['default']&&this.$slots['default'][0]){
                     this.dom['img_div'] = this.$slots['default'][0]['elm'];
                     if(this.$slots['default'][0]['children']){
-                        this.dom['img_div_length'] = this.$slots['default'][0]['children'].length;/*根据轮播图数量 创建指示灯*/
+                        this.dom['img_div_length']=this.$slots['default'][0]['children'].length;/*根据轮播图数量 创建指示灯*/
                     }
                     if(this.dom['img_div_length']>1){
                         this.banner['width']=this.dom['img_div'].clientWidth; //获取最大宽度
+                        this.banner['height']=this.dom['img_div'].clientHeight; //获取最大高度
+                        this.dom['img_div'].style.cssText='position:relative;left:0;width:'+(this.banner['width']*(this.dom['img_div_length']+2))+'px;';
+                        for(let i=0;i<this.dom['img_div_length'];i++){
+                            this.$slots['default'][0]['children'][i]['elm'].style.cssText='width:'+this.banner['width']+'px;height:'+this.banner['height']+'px;display:inline-block;';
+                        }
                         let img={
                             first:this.dom['img_div'].firstElementChild.cloneNode(true), //第一个轮播图
                             final:this.dom['img_div'].lastElementChild.cloneNode(true), //最后一个轮播图
                         }
-                        if(this.$slots['default'][0]['children'][0]['children']){/*<div><div><img /></div></div>*/
-                            //this.$slots['default'][0]['elm'].style.cssText="position: relative;left: 0;width: 100%;height: 100%;display: flex;";
-                        }else{/*<div><img /></div>*/
-                            this.dom['img_div'].appendChild(img.first); //向后添加第一个轮播图
-                            this.dom['img_div'].insertBefore(img.final,this.dom['img_div'].firstElementChild); //在指定的已有子节点之前插入节点
-                            this.dom['img_div'].style.left = -(this.banner['width'])+'px'; //向左移动一个屏幕宽度
-                            this.autoPlay(this.timeout['time']); //页面打开后自动开启播放
-                        }
+                        this.dom['img_div'].appendChild(img.first); //向后添加第一个轮播图
+                        this.dom['img_div'].insertBefore(img.final,this.dom['img_div'].firstElementChild); //在指定的已有子节点之前插入节点
+                        this.dom['img_div'].style.left = -(this.banner['width'])+'px'; //向左移动一个屏幕宽度
+                        this.autoPlay(this.timeout['time']); //页面打开后自动开启播放
                     }else{
                         this.dom['button_left_show']=this.dom['button_right_show']=0;
                     }
@@ -173,14 +223,9 @@ export default {
         overflow: hidden;
     }
     .an_banner_c > *{
-        position: relative;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        img{
-            width: 100%;
-            height: 100%;
+        *{
+            width:100%;
+            height:100%;
         }
     }
     .an_banner_button{
