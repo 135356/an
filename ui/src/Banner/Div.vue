@@ -206,7 +206,7 @@ export default {
                 }
             }
         });
-    },
+    }
 }
 </script>
 
