@@ -3,7 +3,7 @@
     智能地址填充、多语言、本地缓存、自动px转rem、路由跳转、错图替换、h5视频播放
     因为要同一时期制作和维护多个vue项目，然后这些项目又都设计的花里胡哨的(ui比较闲)，所以就出现了很多功能相同但样式都不相同的需求。用传统的开源组件完成这些奇葩需求就会出现改起来比重新做还费劲，甚至得重新换别的开源组件才能完成的情况，所以我自己写了这些组件，样式跟功能都是分开的
 
-##### 贴出一些简单示例，如果有人关注该项目在更新并补充吧。因为现在做c++了 没人关注更新也没劲主要是
+##### 贴出一些简单示例，如果有人关注该项目在更新并补充吧
 **\src\main.js:**
 ```
     import An from '@/libs/an/src'
@@ -131,8 +131,8 @@ data() {
     return {
         scroll_load: {
             data:[],
-            remove:0, //删除
-            triggerF: () => { //触发器
+            remove:0, //为1表示删除，在不刷新的情况下(通过模块换页时)如果需要恢复原始状态设置为1
+            triggerF: () => {
                 /*将api请求放这里面，在滚动条到底部时触发*/
                 return new Promise((resolve) => {
                     setTimeout(()=>{
@@ -140,7 +140,7 @@ data() {
                             this.scroll_load.data=this.scroll_load.data.concat([1,2,3,4,5,6]);
                             resolve(1); //必须收到回调参数才会触发下次请求
                         }else{
-                            resolve(-1); //必须收到回调参数才会触发下次请求
+                            resolve(-1); //同上
                         }
                     }, 500);
                 });
@@ -172,7 +172,7 @@ data() {
 ai_distinguishF()
 {
     if(!this.other.ai_distinguish){
-        this.$store.dispatch('alertA',this._('请在智能识别框内粘贴地址信息'));
+        this.$store.dispatch('alertA',this._('请在智能识别框内输入地址信息'));
         return ;
     }
     let address=this.other.ai_distinguish;
@@ -196,7 +196,7 @@ ai_distinguishF()
             this.other['detailed']=res['other']['detailed'];
         });
     }else{
-        this.$store.dispatch('alertA',this._('未能正确识别,可能地址信息过短'));
+        this.$store.dispatch('alertA',this._('未能正确识别,可能您输入的地址信息过于简单'));
     }
 }
 ```
@@ -236,13 +236,16 @@ mounted() {
 ```
 跳转到百度
 <li @click="$An_link.to('https://www.baidu.com')"></li>
+
 跳转到路由路径为 /aaa 的页面
 <li @click="$An_link.to('/aaa')"></li>
+
 同上，并以get携带参数{ aaa: 100 }
 <li @click="$An_link.to('/aaa', { aaa: 100 })"></li>
+
 跳转到路由名称为aaa的页面，并以post携带参数
 <li @click="$An_link.to('aaa', { aaa: 100 })"></li>
-
+----
 mounted() {
     this.$An_link.to('/aaa', { aaa: 100 }); //同上
     
