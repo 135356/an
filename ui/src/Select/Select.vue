@@ -1,3 +1,30 @@
+<!--
+<div @click="select_1.triggerF()">触发器</div>
+----
+<AnSelectSelect :show_="select_1.show" :data_="select_1.data" :select_index_="select_1.select_i" @AnSelectSelectF="select_1.monitorF"></AnSelectSelect>
+----
+select_1: {
+  show: false,
+  value: '',
+  select_i: -1,
+  data: [
+    {'name': '100', 'value': 1,'style':'color:#f00;height:60px;line-height:60px;'},
+  ],
+  triggerF() {
+    if (this.show) {
+      this.show = false;
+    } else {
+      this.show = true;
+    }
+  },
+  monitorF: (v) => {
+    let this_ = this.select_1;
+    this_.show = v.show;
+    this_.value = v.value;
+    this_.select_i = v.index;
+  },
+},
+-->
 <template>
     <div class="container">
         <div class="text" :style="style">
@@ -6,7 +33,7 @@
         <div class="cont" v-if="show">
             <div class="alert">
                 <ul>
-                    <li v-for="(v,i) in data" @click.stop="selectF(i)" :class="{'active':v.value == value}">{{v.name}}</li>
+                    <li v-for="(v,i) in data" @click.stop="selectF(i)" :class="{'active':v.value == value,'index_0':i===0}" :style="v.style">{{v.name}}</li>
                 </ul>
                 <div class="close_"></div>
                 <div @click.stop="closeF()" class="close">{{'取消'|_}}</div>
@@ -100,11 +127,10 @@
                 position: fixed;
                 right: 0;
                 bottom: 0;
-                z-index: 100;
+                z-index: 10000;
                 width: 100%;
                 max-height: 300px;
                 overflow: auto;
-                background: #fff;
 
                 ul {
                     width: 100%;
@@ -112,25 +138,29 @@
                     font-size: 16px;
 
                     .active {
-                        color:#666;
                         background: #f6f6f6;
                     }
 
                     li {
                         width: 100%;
-                        height: 45px;
-                        line-height: 45px;
+                        height: 40px;
+                        line-height: 40px;
                         margin: auto;
                         overflow: hidden;
                         white-space: nowrap;
                         text-overflow: ellipsis;
                         border-bottom: 1px solid #ddd;
+                        background: #fff;
                     }
+                  li.index_0{
+                    border-top-left-radius: 10px;
+                    border-top-right-radius: 10px;
+                  }
                 }
 
                 .close_{
                     width:100%;
-                    height:65px;
+                    height:60px;
                 }
                 .close {
                     position: fixed;
@@ -138,12 +168,11 @@
                     width: 100%;
                     height: 60px;
                     line-height: 40px;
-                    font-size: 16px;
                     text-align: center;
                     border-top: 5px solid #ddd;
                     border-bottom: none;
-                    color: #777;
-                    background: #ddd;
+                    color: #666;
+                    background: #f6f6f6;
                 }
             }
         }
